@@ -1,7 +1,11 @@
-﻿@model EmployeePayrollMVC.Models.Common.RegisterRequestModel
+﻿@model EmployeePayrollMVC.Models.Common.EmployeeDetailsModel
 
 @{
-    ViewBag.Title = "RegisterEmployee";
+    Layout = null;
+}
+
+@{
+    ViewBag.Title = "EditEmployee";
 }
 <style>
     .error {
@@ -9,51 +13,57 @@
     }
 </style>
 
-@using (Html.BeginForm("RegisterEmployee", "Employee", FormMethod.Post))
+@using (Html.BeginForm("EditEmployee1", "Employee", FormMethod.Post))
 {
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600&display=swap" rel="stylesheet">
+    @Html.AntiForgeryToken()
 
-        <link href="~/Content/CustomCss/register.css" rel="stylesheet" />
-        <title>Employee payroll form</title>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    @Styles.Render("~/Content/CustomCss/register.css")
+    @Styles.Render("~/Content/CustomCss/home.css")
+    @Styles.Render("~/Content/CustomCss/EmployeeList.css")
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <title>Employee payroll form</title>
+</head>
 
     <body>
         <div>
             <header class="header">Employee Payroll form</header>
         </div>
+        @Html.HiddenFor(model => model.EmpId)
         <div class="form">
             <!--The ValidationSummary() extension method displays a summary of all validation errors on a web page as an unordered list element. It can also be used to display custom error messages.-->
             <!--if the first parameter of the ValidationSummary() is false, it will display the field level errors as a summary.
-    The second parameter is for the message. We don't want to provide a message there so specify an empty string.
-    The third parameter is for HTML attributes such as CSS class for messages.-->
+            The second parameter is for the message. We don't want to provide a message there so specify an empty string.
+            The third parameter is for HTML attributes such as CSS class for messages.-->
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="row">
                 <!--the first parameter in the ValidationMessageFor() method is a lambda expression to specify a property for which we want to show an error message.
-        The second parameter is for custom error message if any,
-        and the third parameter is for HTML attributes such as CSS, style, etc.-->
+                The second parameter is for custom error message if any,
+                and the third parameter is for HTML attributes such as CSS, style, etc.-->
                 @Html.ValidationMessageFor(x => x.Name, "", new { @class = "error" })
                 <label>Name</label>
 
                 @Html.TextBoxFor(x => x.Name, new { @class = "form-control", id = "NameId" })
             </div>
-            @Html.ValidationMessageFor(x => x.Gender, "", new { @class = "error" })
             <div style="display:flex;justify-content:space-around;margin-right:40%;padding-top:10px;">
                 <label style="padding: 0px 21px 0px 0px;">Gender</label>
                 <!--the first parameter is a lambda expression that specifies the model property to be bind with a radio button control.
-        We have created two radio buttons for the Gender property in the above example.
-        So, it generates two <input type="RadioButton"> controls with id and name set to property name Gender.
-        The second parameter is a value that will be sent to the server when the form is submitted
-        here Male will be sent if the first radio button selected, and Female will be sent if the second radio button selected.-->
+                We have created two radio buttons for the Gender property in the above example.
+                So, it generates two <input type="RadioButton"> controls with id and name set to property name Gender.
+                The second parameter is a value that will be sent to the server when the form is submitted
+                here Male will be sent if the first radio button selected, and Female will be sent if the second radio button selected.-->
                 @Html.RadioButtonFor(model => model.Gender, "Male", new { style = "margin: 4px;margin-left: 12px;" })
                 Male
 
                 @Html.RadioButtonFor(model => model.Gender, "Female", new { style = "margin: 4px;margin-left: 12px;" })
                 Female
             </div>
-            @Html.ValidationMessageFor(x => x.Department, "", new { @class = "error" })
             <div style="display: flex;flex-direction: row;justify-content: space-around;margin-left: 32%;padding-top: 10px;">
                 <label style=" padding: 0px 12px 5px 0px;">Department</label>
 
@@ -68,7 +78,6 @@
                 @Html.RadioButtonFor(x => x.Department, "Others", new { id = "Others", style = "margin: 4px;margin-left: 12px;" })
                 Others
             </div>
-            @Html.ValidationMessageFor(x => x.SalaryId, "", new { @class = "error" })
             <div class="row">
                 <label>Salary</label>
 
@@ -88,7 +97,7 @@
                 <label>Start Date</label>
 
                 @Html.ValidationMessageFor(x => x.StartDate, "", new { @class = "error" })
-                @Html.TextBoxFor(model => model.StartDate, new { type = "date" })
+                @Html.EditorFor(model => model.StartDate, new { type = "date" })
 
             </div>
             <div class="row">
@@ -96,26 +105,13 @@
                 @Html.TextBoxFor(x => x.Description, new { @class = "form-control" })
             </div>
             <div class="btnColumn">
-                <button type="submit" class="btn btn-primary" @*onclick="return validate()"*@>Submit</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="reset" class="btn bg-danger">Reset</button>
                 <a href="@Url.Action("index", "Employee")" class="btn btn-success">Employee List</a>
             </div>
         </div>
     </body>
-    @*<script>
-        function validate() {
-            if (document.getElementById("NameId").value.length == 0) {
-                alert("Name is Required");
-                return false;
-            }
-        }
-    </script>*@
 
-    @section validation
-    {
-        <script src="~/Scripts/jquery.validate.min.js"></script>
-        <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
-    }
 }
 
 <div>
